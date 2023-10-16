@@ -1,30 +1,83 @@
 ﻿@model List<Music>
 
-<h1>Music List</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Artist</th>
-            <th>Year</th>
-            <th>Rating</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var music in Model)
-        {
-            <tr>
-                <td>@music.Title</td>
-                <td>@music.Artist</td>
-                <td>@music.Year</td>
-                <td>@music.Rating</td>
-                <td>
-                    <a asp-controller="Music" asp-action="Edit" 
-                    asp-route-id="@music.MusicId">Edit</a>
-                    <a asp-controller="Music" asp-action="Delete"
-                    asp-route-id="@music.MusicId">Delete</a>
-                </td>
-            </tr>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: black;
+            color: white;
         }
-    </tbody>
-</table>
+        .navbar {
+            background-color: #343a40;
+        }
+        .table {
+            background-color: #212529;
+        }
+        .table th, .table td {
+            border-color: #343a40;
+        }
+
+        footer{
+           color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark">
+        <a class="navbar-brand" href="/">Music List</a>
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/products">Products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/cart">Cart</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Music List</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Year</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var music in Model)
+                {
+                    <tr>
+                        <td>@music.Title</td>
+                        <td>@music.Artist</td>
+                        <td>@music.Year</td>
+                        <td>@music.Rating</td>
+                        <td>
+                            <a asp-controller="Music" asp-action="Edit" asp-route-id="@music.MusicId" class="btn btn-primary btn-sm">Edit</a>
+                            <a asp-controller="Music" asp-action="Delete" asp-route-id="@music.MusicId" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>
