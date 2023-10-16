@@ -6,19 +6,16 @@ namespace MusicList2.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
+        private MusicContext context { get; set; }
+        public HomeController(MusicContext ctx) => context = ctx;
         public IActionResult Index()
         {
-            return View();
-        }
+            var music = context.Music.OrderBy(m => m.Name).ToList();
+            return View(music);
 
-       
-        
+
+
+
+        }
     }
 }

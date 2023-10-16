@@ -1,8 +1,30 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<MusicList.Models.Music>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Music List</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Year</th>
+            <th>Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var music in Model)
+        {
+            <tr>
+                <td>@music.Title</td>
+                <td>@music.Artist</td>
+                <td>@music.Year</td>
+                <td>@music.Rating</td>
+                <td>
+                    <a asp-controller="Movie" asp-action="Edit" 
+                    asp-route-id="@movie.MovieId">Edit</a>
+                    <a asp-controller="Movie" asp-action="Delete"
+                    asp-route-id="@movie.MovieId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -4,6 +4,8 @@ namespace MusicList2.Models
 {
     public class Music
     {
+        internal readonly object Name;
+
         public int MusicId { get; set; }
 
         [Required(ErrorMessage = "Please enter a title.")]
