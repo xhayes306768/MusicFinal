@@ -10,7 +10,7 @@ namespace MusicList2.Controllers
         public HomeController(MusicContext ctx) => context = ctx;
         public IActionResult Index()
         {
-            var music = context.Music.OrderBy(m => m.Name).ToList();
+            var music = context.Music.OrderBy(m => m.MusicId).ToList();
             return View(music);
 
 

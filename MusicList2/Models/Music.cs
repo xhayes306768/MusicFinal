@@ -9,10 +9,10 @@ namespace MusicList2.Models
         public int MusicId { get; set; }
 
         [Required(ErrorMessage = "Please enter a title.")]
-        public string Title { get; set; }
+        public  string Title { get; set; }
 
         [Required(ErrorMessage = "Please enter the artist.")]
-        public string Artist { get; set; }
+        public  string Artist { get; set; }
 
         [Required(ErrorMessage = "Please enter the year.")]
         [Range(1889, 2999, ErrorMessage = "Year must be after 1889.")]
