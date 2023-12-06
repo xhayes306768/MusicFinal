@@ -17,7 +17,43 @@ namespace MusicList2.Controllers
             _context = context;
         }
 
-        // GET: api/Music
+        public async Task<IActionResult> Index(string titleFilter, string artistFilter, int? yearFilter, int? ratingFilter)
+        {
+            var query = _context.Music.AsQueryable();
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(titleFilter))
+            {
+                query = query.Where(m => m.Title.Contains(titleFilter));
+            }
+
+            if (!string.IsNullOrEmpty(artistFilter))
+            {
+                query = query.Where(m => m.Artist.Contains(artistFilter));
+            }
+
+            if (yearFilter.HasValue)
+            {
+                query = query.Where(m => m.Year == yearFilter);
+            }
+
+            if (ratingFilter.HasValue)
+            {
+                query = query.Where(m => m.Rating == ratingFilter);
+            }
+
+            var musicList = await query.ToListAsync();
+
+            return (IActionResult)musicList;
+        }
+
+
+
+
+
+
+
+
         [HttpGet]
         public async Task<ActionResult<IQueryable<Music>>> GetMusic()
         {
@@ -25,7 +61,7 @@ namespace MusicList2.Controllers
             return Ok(musicList);
         }
 
-        // GET: api/Music/1
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<Music>> GetMusicById(int id)
         {
@@ -33,29 +69,29 @@ namespace MusicList2.Controllers
 
             if (music == null)
             {
-                return NotFound(); // Return 404 Not Found
+                return NotFound(); 
             }
 
             return Ok(music);
         }
 
-        // POST: api/Music
+        
         [HttpPost]
         public async Task<ActionResult<Music>> PostMusic(Music music)
         {
             _context.Music.Add(music);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetMusicById), new { id = music.MusicId }, music); // Return 201 Created
+            return CreatedAtAction(nameof(GetMusicById), new { id = music.MusicId }, music); 
         }
 
-        // PUT: api/Music/1
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMusic(int id, Music music)
         {
             if (id != music.MusicId)
             {
-                return BadRequest(); // Return 400 Bad Request
+                return BadRequest(); 
             }
 
             _context.Entry(music).State = EntityState.Modified;
@@ -68,7 +104,7 @@ namespace MusicList2.Controllers
             {
                 if (!MusicExists(id))
                 {
-                    return NotFound(); // Return 404 Not Found
+                    return NotFound(); 
                 }
                 else
                 {
@@ -76,23 +112,23 @@ namespace MusicList2.Controllers
                 }
             }
 
-            return NoContent(); // Return 204 No Content
+            return NoContent(); 
         }
 
-        // DELETE: api/Music/1
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMusic(int id)
         {
             var music = await _context.Music.FindAsync(id);
             if (music == null)
             {
-                return NotFound(); // Return 404 Not Found
+                return NotFound(); 
             }
 
             _context.Music.Remove(music);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // Return 204 No Content
+            return NoContent(); 
         }
 
         private bool MusicExists(int id)

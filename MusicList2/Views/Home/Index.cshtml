@@ -47,6 +47,29 @@
     <div class="container mt-5">
         <h1>Music List</h1>
 
+        
+        <form method="get" action="/Music/Index" class="mb-4">
+            <div class="form-row">
+                <div class="col-md-3 mb-2">
+                    <input type="text" name="titleFilter" class="form-control" placeholder="Title">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <input type="text" name="artistFilter" class="form-control" placeholder="Artist">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <input type="number" name="yearFilter" class="form-control" placeholder="Year">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <input type="number" name="ratingFilter" class="form-control" placeholder="Rating">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+
+
+
         <table class="table">
             <thead>
                 <tr>
