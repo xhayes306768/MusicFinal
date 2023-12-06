@@ -1,69 +1,103 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MusicList2.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MusicList2.Controllers
 {
-    public class MusicController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class MusicController : ControllerBase
     {
-        private readonly MusicContext context;
+        private readonly MusicContext _context;
 
-        public MusicController(MusicContext ctx)
+        public MusicController(MusicContext context)
         {
-            context = ctx;
+            _context = context;
         }
 
+        // GET: api/Music
         [HttpGet]
-        public IActionResult Add()
+        public async Task<ActionResult<IQueryable<Music>>> GetMusic()
         {
-            ViewBag.Action = "Add";
-            return View("Edit", new Music());
+            var musicList = await _context.Music.ToListAsync();
+            return Ok(musicList);
         }
 
-        [HttpGet]
-        public IActionResult Edit(int id)
+        // GET: api/Music/1
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Music>> GetMusicById(int id)
         {
-            ViewBag.Action = "Edit";
-            var music = context.Music.Find(id);
-            return View(music);
-        }
+            var music = await _context.Music.FindAsync(id);
 
-        [HttpPost]
-        public IActionResult Edit(Music music)
-        {
-            if (ModelState.IsValid)
+            if (music == null)
             {
-                if (music.MusicId == 0)
-                    context.Music.Add(music);
+                return NotFound(); // Return 404 Not Found
+            }
+
+            return Ok(music);
+        }
+
+        // POST: api/Music
+        [HttpPost]
+        public async Task<ActionResult<Music>> PostMusic(Music music)
+        {
+            _context.Music.Add(music);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetMusicById), new { id = music.MusicId }, music); // Return 201 Created
+        }
+
+        // PUT: api/Music/1
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutMusic(int id, Music music)
+        {
+            if (id != music.MusicId)
+            {
+                return BadRequest(); // Return 400 Bad Request
+            }
+
+            _context.Entry(music).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MusicExists(id))
+                {
+                    return NotFound(); // Return 404 Not Found
+                }
                 else
-                    context.Music.Update(music);
+                {
+                    throw;
+                }
+            }
 
-                context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                ViewBag.Action = (music.MusicId == 0) ? "Add" : "Edit";
-                return View(music);
-            }
+            return NoContent(); // Return 204 No Content
         }
 
-        [HttpGet]
-        public IActionResult Delete(int id)
+        // DELETE: api/Music/1
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMusic(int id)
         {
-            var music = context.Music.Find(id);
-            return View(music);
+            var music = await _context.Music.FindAsync(id);
+            if (music == null)
+            {
+                return NotFound(); // Return 404 Not Found
+            }
+
+            _context.Music.Remove(music);
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // Return 204 No Content
         }
 
-        [HttpPost]
-        public IActionResult DeleteConfirmed(int id)
+        private bool MusicExists(int id)
         {
-            var music = context.Music.Find(id);
-            if (music != null)
-            {
-                context.Music.Remove(music);
-                context.SaveChanges();
-            }
-            return RedirectToAction("Index", "Home");
+            return _context.Music.Any(e => e.MusicId == id);
         }
     }
 }
